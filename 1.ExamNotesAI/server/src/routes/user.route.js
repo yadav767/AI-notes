@@ -8,7 +8,7 @@ const router=express.Router()
 router.post("/google",registerUserController)
 
 //logout
-router.post("/logout",logoutUserController)
+router.get("/logout",logoutUserController)
 
 
 //Get current user
