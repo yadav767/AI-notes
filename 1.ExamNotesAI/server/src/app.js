@@ -3,6 +3,7 @@ const cors = require("cors")
 const cookieParser = require("cookie-parser")
 const authRouter = require("./routes/user.route")
 const notesRouter=require("./routes/gemini.route")
+const pdfRouter=require("./routes/pdf.route")
 const app = express()
 
 
@@ -20,5 +21,7 @@ app.use(express.json())
 
 app.use("/api/auth", authRouter)
 app.use("/api/notes",notesRouter)
+app.use("/api/pdf",pdfRouter)
+
 
 module.exports = app
