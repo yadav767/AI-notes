@@ -6,7 +6,6 @@ async function getMyNotes(req, res) {
     try {
         const userId = req.userId
         const notes = await notesModel.find({ user: userId }).select("topic classType examType revisionMode includeDiagram includeChart createdAt").sort({ createdAt: -1 })
-        console.log(notes);
         if (!notes) {
             return res.status(404).json({
                 error: "Note not found !"
@@ -31,6 +30,7 @@ async function getSingleNotes(req, res) {
                 error: "Note not found !"
             })
         }
+        return res.status(200).json(note)
     } catch (error) {
         return res.status(500).json({ message: `getSingle note error ${error}` })
 

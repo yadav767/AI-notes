@@ -24,9 +24,23 @@ const cleanMermaidChart = (diagram) => {
 
 const autoFixBadNodes = (diagram) => {
   let index = 0;
-  return diagram.replace(/\[(.*?)\]/g, (_, label) => {
+  const used = new Map();
+
+  return diagram.replace(/\[(.*?)\]/g, (match, label) => {
+    // normalize label for key
+    const key = label.trim();
+
+    // reuse same node if label already seen
+    if (used.has(key)) {
+      return used.get(key);
+    }
+
     index++;
-    return `N${index}[${label}]`;
+    const id = `N${index}`;
+    const node = `${id}["${key}"]`;
+
+    used.set(key, node);
+    return node;
   });
 };
 

@@ -25,7 +25,8 @@ const markDownComponent = {
 }
 const FinalResult = ({ result }) => {
     const [quickRevision, setQuickRevision] = useState(false)
-    const results = result.data
+    const results =result?.data?.content || result?.content || result?.data
+    
     if (!results ||
         !results.subTopics ||
         !results.questions ||
@@ -49,7 +50,7 @@ const FinalResult = ({ result }) => {
                             }`}>
                         {quickRevision ? "Exit Revision Mode" : "Quick Revision (5 min)"}
                     </button>
-                    <button onClick={()=>downloadPdf(results)} className='px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700'>
+                    <button onClick={() => downloadPdf(results)} className='px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700'>
                         ⬇️ Download PDF
                     </button>
 
@@ -114,7 +115,7 @@ const FinalResult = ({ result }) => {
             </section>}
 
 
-            {results.charts && results.charts.length===0 && (
+            {results.charts && results.charts.length === 0 && (
                 <p className='text-sm text-gray-400 italic'>
                     📈 Charts are not relevant for this topic.
                 </p>

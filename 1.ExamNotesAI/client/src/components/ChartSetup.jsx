@@ -39,7 +39,7 @@ const ChartSetup = ({ charts }) => {
                             {chart.type === "pie" && (
                                 <PieChart>
                                     <Tooltip />
-                                    <Pie data={chart.data} dataKey="value" nameKey="name" outerRadius={100} label>
+                                    <Pie data={chart.data} dataKey="value" nameKey="name" outerRadius={80} label>
                                         {chart.data.map((_, i) => (
                                             <Cell key={i} fill={colors[i % colors.length]} />
                                         ))}

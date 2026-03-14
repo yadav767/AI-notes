@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { GiHamburgerMenu } from "react-icons/gi";
+import FinalResult from '../components/FinalResult'
 
 
 const History = () => {
@@ -14,13 +15,14 @@ const History = () => {
   const credits = userData.credits
   const [topics, setTopics] = useState([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-
+  const [selectedNote, setSelectedNote] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [activeNoteId, setActiveNoteId] = useState(null)
 
   useEffect(() => {
     const myNotes = async () => {
       try {
         const response = await axios.get(`${serverUrl}/api/notes/getnotes`, { withCredentials: true })
-        console.log(response);
         setTopics(Array.isArray(response.data) ? response.data : [])
       } catch (error) {
 
@@ -29,11 +31,24 @@ const History = () => {
     myNotes()
   }, [])
 
-  useEffect(()=>{
-    if(window.innerWidth>=1024 ){
+  useEffect(() => {
+    if (window.innerWidth >= 1024) {
       setIsSidebarOpen(true)
     }
-  },[])
+  }, [])
+
+  const openNotes=async (noteId)=>{
+    setLoading(true)
+    setActiveNoteId(noteId)
+      try {
+        const response=await axios.get(`${serverUrl}/api/notes/${noteId}`,{withCredentials:true})
+        setSelectedNote(response)
+        setLoading(false)
+      } catch (error) {
+        console.log(error);
+      }
+  }
+
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 px-4 py-6'>
@@ -59,7 +74,7 @@ const History = () => {
 
           {!isSidebarOpen && <button onClick={() => setIsSidebarOpen(true)} className='lg:hidden text-white text-2xl '>
             <GiHamburgerMenu />
-          </button>       }
+          </button>}
 
           <button
             onClick={() => navigate("/pricing")}
@@ -94,13 +109,65 @@ const History = () => {
               ⬅️ back
             </button>
 
-            <div onClick={()=>navigate("/notes")} className='mb-3  space-y-1'>
-                <button className='w-full px-3 py-2 rounded-lg text-sm text-gray-200 bg-white/10 hover:bg-white/20'>
-                  ➕ New Notes
-                </button>
+            <div className='mb-3  space-y-1'>
+              <button onClick={() => navigate("/notes")} className='w-full px-3 py-2 rounded-lg text-sm text-gray-200 bg-white/10 hover:bg-white/20'>
+                ➕ New Notes
+              </button>
+              <hr className='border-white/10 mb-4' />
+
+              <h2 className='mb-4 text-lg font-bold bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent'>
+                📝 Your Notes
+              </h2>
+
+              {topics.length === 0 && (
+                <p className='text-sm text-gray-400 '>No notes created yet.</p>
+              )}
+
+              <ul className='space-y-3'>
+                {topics.map((t, i) => (
+                  <li onClick={()=>openNotes(t._id)} key={i} className={`cursor-pointer rounded-xl p-3 border transition-all
+                    ${
+                      activeNoteId === t._id 
+                      ?"bg-indigo-500/30 border-indigo-400 shadow-[0_0_0_1px_rgba(99,102,241,0.6)]"
+                      :"bg-white/5 border-white/10 hover:bg-white/10"
+                    }
+                  `}>
+
+                    <p className='text-sm font-semibold text-white'>{t.topic}</p>
+                    <div className='flex flex-wrap gap-2 mt-2 text-xs'>
+                      {t.classType && <span className='px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300'>ClassType :{t.classType}</span>}
+                      {t.classType && <span className='px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300'>{t.examType}</span>}
+                    </div>
+
+                    <div className='flex gap-3 mt-2 text-xs text-gray-300'>
+                      {t.revisionMode && <span>⚡ Revision</span>}
+                      {t.includeDiagram && <span>📊 Diagram</span>}
+                      {t.includeChart && <span>📈   Chart</span>}
+
+                    </div>
+
+
+                  </li>
+                ))}
+              </ul>
+
             </div>
           </motion.div>}
         </AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className='lg:col-span-3 rounded-2xl bg-white shadow-[0_15px_40px_rgba(0,0,0,0.15)] p-6 min-h-[75vh]'>
+            {loading && <p className='text-center text-gray-500 '>Loading notes...</p>}
+            {!loading && !selectedNote && (
+              <div className='h-full flex items-center justify-center text-gray-400'>
+                Select a topic from the sidebar
+              </div>
+            )}
+            {!loading && selectedNote && <FinalResult result={selectedNote} /> }
+
+        </motion.div>
       </div>
 
     </div>

@@ -22,7 +22,6 @@ async function registerUserController(req, res) {
             user
         })
     } catch (error) {
-        console.log(error)
         res.status(500).json({
             message: `googleSignup ${error}`
         })
