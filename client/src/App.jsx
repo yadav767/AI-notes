@@ -14,7 +14,7 @@ import Pricing from './pages/Pricing'
 import { getUser } from './services/api'
 import { useDispatch, useSelector } from 'react-redux'
 
-export const serverUrl = "http://localhost:8000"
+export const serverUrl = "https://ainotes-server.vercel.app"
 
 const App = () => {
   const dispatch = useDispatch()
