@@ -19,7 +19,7 @@ async function registerUserController(req, res) {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            samesite: "none",
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 1000
         });
         return res.status(200).json({
