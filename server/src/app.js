@@ -11,7 +11,7 @@ const app = express()
 
 app.post(
     "/api/credits/webhook",
-    express.raw({ type: "application/josn" }),
+    express.raw({ type: "application/json" }),
     stripeWebhook
 )
 
