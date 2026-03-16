@@ -25,7 +25,9 @@ app.use(cors(
 app.use(cookieParser())
 app.use(express.json())
 
-
+app.get("/health", (req, res) => {
+    res.json({ status: "ok", message: "Server is running!" })
+})
 
 app.use("/api/auth", authRouter)
 app.use("/api/notes", notesRouter)
