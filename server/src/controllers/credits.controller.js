@@ -71,7 +71,7 @@ async function stripeWebhook(req, res) {
         const user = await userModel.findByIdAndUpdate(userId, {
             $inc: { credits: creditsToAdd },
             $set: { isCreditAvailable: true },
-        }, { new:true })
+        }, { returnDocument:"after" })
     }
     res.json({ recieved: true })
 }
